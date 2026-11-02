@@ -15,17 +15,11 @@ jobs:
       - name: Baixar arquivos do repositorio
         uses: actions/checkout@v4
 
-      - name: Preparar estrutura (descompacta se for .zip)
+      - name: Descompactar projeto completo
         run: |
-          if [ ! -f "settings.gradle.kts" ]; then
-            ZIP_FILE=$(find . -maxdepth 2 -name "*.zip" | head -n 1)
-            if [ -n "$ZIP_FILE" ]; then
-              echo "Descompactando $ZIP_FILE..."
-              unzip -q -o "$ZIP_FILE"
-            fi
-            if [ -d "MediaHubAndroid" ] && [ -f "MediaHubAndroid/settings.gradle.kts" ]; then
-              cp -r MediaHubAndroid/* .
-            fi
+          if [ -f "MediaHub_Android_Project_Completo.zip" ]; then
+            echo "Descompactando projeto completo..."
+            unzip -q -o MediaHub_Android_Project_Completo.zip
           fi
           ls -la
 
@@ -51,7 +45,6 @@ jobs:
 
       - name: Publicar instalador direto em Releases
         uses: softprops/action-gh-release@v2
-        if: always()
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "MediaHub APK #${{ github.run_number }}"
